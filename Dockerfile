@@ -7,9 +7,11 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Run stage
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-# Copy the built jar file (change the jar name based on your pom.xml target)
+# Expose the default Spring Boot port
+EXPOSE 8080
+# Copy the built jar file
 COPY --from=build /app/target/*.jar app.jar
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
