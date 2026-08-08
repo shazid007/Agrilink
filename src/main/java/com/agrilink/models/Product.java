@@ -40,7 +40,8 @@ public class Product implements Serializable {
     public void setApproved(boolean approved) { this.isApproved = approved; }
     public void setStatus(String status) { this.status = status; }
     public void setCustomerPrice(double price) { this.customerPrice = price; }
-
+    public void setQuantity(int quantity) {
+    this.quantity = quantity;}
     @Override
     public String toString() {
         return name + " (Grade " + grade + ") - Qty: " + quantity + " | Status: " + status;
