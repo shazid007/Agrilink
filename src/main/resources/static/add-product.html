@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product - Agrilink</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+        body { background: linear-gradient(180deg, #e7f7e8 0%, #f8fcf7 100%); color: #1e4f26; }
+        .form-card { max-width: 640px; margin: 4rem auto; border-radius: 1.5rem; border: 1px solid rgba(46, 125, 46, 0.12); }
+        .btn-success { background-color: #2f7d37; border-color: #2f7d37; }
+        .btn-success:hover { background-color: #27612f; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card form-card shadow-sm p-4 fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h4 text-success">Add Product for Approval</h1>
+                <p class="text-muted mb-0">Send your crop listing to the admin for review.</p>
+            </div>
+            <div class="d-flex gap-2">
+            <a href="farmer-dashboard.html" class="btn btn-outline-secondary">Back to Dashboard</a>
+            <a href="index.html" class="btn btn-outline-success">Logout</a>
+        </div>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label class="form-label">Catalog Item</label>
+                <select class="form-select">
+                    <option selected>Select item</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Quantity (in kg)</label>
+                <input type="number" min="1" class="form-control" placeholder="Enter quantity" />
+            </div>
+            <button type="submit" class="btn btn-success">Submit for Approval</button>
+        </form>
+    </div>
+</div>
+<script>
+  (function() {
+    const theme = localStorage.getItem('agrilinkTheme');
+    if (theme === 'dark') document.body.classList.add('theme-dark');
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

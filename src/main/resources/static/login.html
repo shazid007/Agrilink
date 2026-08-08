@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Agrilink</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+        body {
+            background: radial-gradient(circle at top, #eef8f0 0%, #f5fbf6 45%, #ffffff 100%);
+            color: #1f4f27;
+            overflow-x: hidden;
+        }
+        .auth-card {
+            max-width: 900px;
+            margin: 4rem auto;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeInUp .9s ease forwards;
+        }
+        .auth-card .form-control {
+            border-radius: 1rem;
+            transition: border-color .25s ease, box-shadow .25s ease, transform .2s ease;
+        }
+        .auth-card .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.18);
+            border-color: #2f7d37;
+            transform: scale(1.01);
+        }
+        .auth-sidebar {
+            background: linear-gradient(180deg, #2f7d37 0%, #60ac61 100%);
+            color: #fff;
+            animation: slideIn .95s ease forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .auth-sidebar h2 { font-weight: 700; }
+        .btn-accent {
+            background-color: #2f7d37;
+            border-color: #2f7d37;
+            transition: transform .2s ease, box-shadow .25s ease, background-color .25s ease;
+        }
+        .btn-accent:hover {
+            background-color: #25612f;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(37, 97, 47, 0.18);
+        }
+        .card-body {
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeInUp .9s ease .2s forwards;
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(24px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card auth-card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-5 auth-sidebar d-flex flex-column justify-content-center p-5">
+                <h2>Welcome Back</h2>
+                <p class="text-white-75">Log in to manage your account and access Agrilink market tools.</p>
+                <div class="mt-4">
+                    <p class="mb-1"><strong>Tip:</strong> Use your registered email and password.</p>
+                    <p class="mb-0">Need access? Register a new account now.</p>
+                </div>
+            </div>
+            <div class="col-md-7 p-5">
+                <div class="card-body">
+                    <h3 class="mb-4 text-success">Login to Agrilink</h3>
+                    <form id="loginForm" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="email" type="email" class="form-control" placeholder="name@example.com" required />
+                            <div class="invalid-feedback">Please enter a valid email address.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <input id="password" type="password" class="form-control" placeholder="Enter password" required />
+                            <div class="invalid-feedback">Password is required.</div>
+                        </div>
+                        <button type="submit" class="btn btn-accent w-100 py-2">Login</button>
+                        <div id="loginError" class="text-danger small mt-3"></div>
+                    </form>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <p class="text-muted mb-0">Don't have an account? <a href="register.html" class="text-success">Register here</a></p>
+                        <a href="index.html" class="btn btn-outline-success">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        loginError.textContent = '';
+
+        if (!loginForm.checkValidity()) {
+            loginForm.classList.add('was-validated');
+            return;
+        }
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            localStorage.setItem('agrilinkUser', JSON.stringify({
+                userId: data.userId,
+                name: data.name,
+                role: data.role
+            }));
+
+            const role = data.role;
+            if (role === 'ADMIN') window.location.href = 'admin-dashboard.html';
+            else if (role === 'FARMER') window.location.href = 'farmer-dashboard.html';
+            else if (role === 'CUSTOMER') window.location.href = 'customer-dashboard.html';
+            else if (role === 'TRANSPORT') window.location.href = 'transport-dashboard.html';
+            else window.location.href = 'index.html';
+        } else {
+            loginError.textContent = data.error || 'Login failed. Please try again.';
+        }
+    });
+
+    const inputs = loginForm.querySelectorAll('.form-control');
+    inputs.forEach((input) => {
+        input.addEventListener('input', () => {
+            if (input.checkValidity()) {
+                input.classList.remove('is-invalid');
+            }
+        });
+    });
+</script>
+<script>
+  (function() {
+    const theme = localStorage.getItem('agrilinkTheme');
+    if (theme === 'dark') document.body.classList.add('theme-dark');
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

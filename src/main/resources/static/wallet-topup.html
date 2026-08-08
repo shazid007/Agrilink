@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wallet Top-up - Agrilink</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+        body { background: linear-gradient(180deg, #eaf2ff 0%, #f8fbff 100%); color: #1b3f75; }
+        .topup-card { max-width: 520px; margin: 4rem auto; border-radius: 1.5rem; border: 1px solid rgba(27, 63, 117, 0.12); }
+        .quick-button { min-width: 100px; }
+        .btn-success { background-color: #1b3f75; border-color: #1b3f75; }
+        .btn-success:hover { background-color: #152f5a; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card topup-card shadow-sm p-4 fade-in">
+        <div class="mb-4">
+            <h1 class="h4 text-success">Wallet Top-up</h1>
+            <p class="text-muted mb-0">Securely add funds to your customer wallet.</p>
+        </div>
+        <form id="walletForm">
+            <div class="mb-3">
+                <label class="form-label">Amount ($)</label>
+                <input id="amount" type="number" class="form-control" placeholder="Enter amount" min="1" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Action</label>
+                <select id="actionMode" class="form-select">
+                    <option value="TOPUP">Top-up</option>
+                    <option value="WITHDRAW">Withdraw</option>
+                </select>
+            </div>
+            <div class="mb-3 d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-outline-success quick-button">$50</button>
+                <button type="button" class="btn btn-outline-success quick-button">$100</button>
+                <button type="button" class="btn btn-outline-success quick-button">$500</button>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Update Wallet</button>
+        </form>
+        <div id="message" class="mt-3 text-center text-danger"></div>
+        <div class="mt-3 text-end">
+            <div class="d-flex gap-3">
+                <a href="customer-dashboard.html" class="text-primary">Back to Dashboard</a>
+                <a href="index.html" class="text-primary">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const walletForm = document.getElementById('walletForm');
+    const amountInput = document.getElementById('amount');
+    const actionMode = document.getElementById('actionMode');
+    const message = document.getElementById('message');
+    const quickButtons = document.querySelectorAll('.quick-button');
+
+    quickButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            amountInput.value = button.textContent.replace('$', '');
+        });
+    });
+
+    walletForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        message.textContent = '';
+        const stored = localStorage.getItem('agrilinkUser');
+        if (!stored) {
+            message.textContent = 'Please login again first.';
+            return;
+        }
+
+        const { userId } = JSON.parse(stored);
+        const amount = Number(amountInput.value);
+        const action = actionMode.value;
+
+        const response = await fetch('/api/user/wallet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, amount, action })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            message.textContent = data.error || 'Unable to update wallet.';
+            return;
+        }
+
+        message.classList.remove('text-danger');
+        message.classList.add('text-success');
+        message.textContent = `Wallet updated: $${Number(data.walletBalance).toFixed(2)}`;
+        setTimeout(() => window.location.href = 'customer-dashboard.html', 1500);
+    });
+</script>
+<script>
+  (function() {
+    const theme = localStorage.getItem('agrilinkTheme');
+    if (theme === 'dark') document.body.classList.add('theme-dark');
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

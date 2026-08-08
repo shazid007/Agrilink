@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Products - Agrilink</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+        body { background: linear-gradient(180deg, #e7f7e8 0%, #f8fcf7 100%); color: #1e4f26; }
+        .badge-pending { background-color: #f7c948; color: #3f3f3f; }
+        .badge-approved { background-color: #4caf50; }
+        .badge-sold { background-color: #1565c0; }
+        .table-card { border-radius: 1.4rem; }
+        .btn-outline-secondary { color: #1e4f26; border-color: rgba(46, 125, 46, 0.2); }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 text-success">My Listed Products</h1>
+            <p class="text-muted mb-0">Monitor the submission status and revenue estimates.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="farmer-dashboard.html" class="btn btn-outline-secondary">Back to Dashboard</a>
+            <a href="index.html" class="btn btn-outline-success">Logout</a>
+        </div>
+    </div>
+    <div class="card shadow-sm fade-in">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity Submitted</th>
+                            <th>Current Status</th>
+                            <th>Expected Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No products submitted yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  (function() {
+    const theme = localStorage.getItem('agrilinkTheme');
+    if (theme === 'dark') document.body.classList.add('theme-dark');
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
